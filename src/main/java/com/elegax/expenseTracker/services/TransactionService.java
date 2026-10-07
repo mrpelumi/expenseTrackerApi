@@ -85,7 +85,7 @@ public class TransactionService {
         //current date
         LocalDate currentDate = LocalDate.now();
 
-        List<TransactionResponse> recentTransactionList = transactionRepository.findAll().stream()
+        List<TransactionResponse> recentTransactionList = transactionRepository.findTop5ByOrderByDateUpdatedDesc().stream()
                 .map(transactionResponseMapper::toDto).toList();
 
         if (SummaryFilter.TODAY.equals(filterBy)){
