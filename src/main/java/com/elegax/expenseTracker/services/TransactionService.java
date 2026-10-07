@@ -73,6 +73,10 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
+    public void deleteTransaction(String transactionId){
+        transactionRepository.deleteByTransactionId(transactionId);
+    }
+
     /* ================= FIND SUMMARY ================= */
 
     /**

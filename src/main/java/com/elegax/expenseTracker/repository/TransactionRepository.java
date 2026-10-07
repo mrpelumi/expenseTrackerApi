@@ -24,6 +24,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     Optional<Transaction> findByTransactionIdOrderByDateUpdatedDesc(String transactionId);
 
+    long deleteByTransactionId(String transactionId);
+
+
     @Query("""
             SELECT COALESCE(SUM(t.amount), 0)
             FROM Transaction t
