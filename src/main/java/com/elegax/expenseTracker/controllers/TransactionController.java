@@ -4,6 +4,7 @@ package com.elegax.expenseTracker.controllers;
 import com.elegax.expenseTracker.dto.SummaryResponse;
 import com.elegax.expenseTracker.dto.TransactionRequest;
 import com.elegax.expenseTracker.dto.TransactionResponse;
+import com.elegax.expenseTracker.dto.TransactionUpdateRequest;
 import com.elegax.expenseTracker.entity.Category;
 import com.elegax.expenseTracker.entity.SummaryFilter;
 import com.elegax.expenseTracker.entity.TransactionType;
@@ -20,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -65,6 +65,15 @@ public class TransactionController {
         // Call the service to create the transaction
         transactionService.createTransaction(transactionRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Operation(summary = "Update Transaction",description = "Update transaction by the transaction id")
+    @ApiResponse(responseCode = "204", description = "Transaction successfully updated")
+    @PatchMapping("/transactions/{transactionId}")
+    public ResponseEntity<Void> updateTransaction(@PathVariable String transactionId,
+                                                  @Valid @RequestBody TransactionUpdateRequest transactionUpdateRequest){
+        transactionService.updateTransaction(transactionId, transactionUpdateRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(

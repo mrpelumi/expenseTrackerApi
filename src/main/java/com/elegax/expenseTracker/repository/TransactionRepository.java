@@ -24,6 +24,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     Optional<Transaction> findByTransactionIdOrderByDateUpdatedDesc(String transactionId);
 
+    Optional<Transaction> findByTransactionId(String transactionId);
+
     long deleteByTransactionId(String transactionId);
 
 

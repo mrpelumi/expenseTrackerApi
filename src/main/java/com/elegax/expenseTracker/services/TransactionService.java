@@ -7,11 +7,13 @@ import com.elegax.expenseTracker.entity.Transaction;
 import com.elegax.expenseTracker.entity.TransactionType;
 import com.elegax.expenseTracker.mappers.TransactionRequestMapper;
 import com.elegax.expenseTracker.mappers.TransactionResponseMapper;
+import com.elegax.expenseTracker.mappers.TransactionUpdateMapper;
 import com.elegax.expenseTracker.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
@@ -27,6 +29,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionResponseMapper transactionResponseMapper;
     private final TransactionRequestMapper transactionRequestMapper;
+    private final TransactionUpdateMapper transactionUpdateMapper;
 
     /**
      *
@@ -67,12 +70,21 @@ public class TransactionService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found"));
     }
 
+    @Transactional
     public void createTransaction(TransactionRequest transactionRequest){
         Transaction transaction = transactionRequestMapper.toEntity(transactionRequest);
         transaction.setTransactionId(generateTransactionNumber());
         transactionRepository.save(transaction);
     }
 
+    @Transactional
+    public void updateTransaction(String transactionId, TransactionUpdateRequest request){
+        Transaction transaction = transactionRepository.findByTransactionId(transactionId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found"));
+        transactionUpdateMapper.partialUpdate(request, transaction);
+    }
+
+    @Transactional
     public void deleteTransaction(String transactionId){
         transactionRepository.deleteByTransactionId(transactionId);
     }
